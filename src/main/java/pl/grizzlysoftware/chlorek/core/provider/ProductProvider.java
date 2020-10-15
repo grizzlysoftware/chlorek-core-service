@@ -10,6 +10,7 @@ import java.util.Collection;
  */
 public interface ProductProvider {
     Product getProduct(Long id);
+    Collection<Product> getProductsByEan(String ean);
     Collection<Product> getProducts(String sort);
     Collection<Product> getProducts(int limit, int offset, String sort);
     Collection<ProductWithStockStatus> getProductsWithStockStatus(long warehouseId, String sort);
