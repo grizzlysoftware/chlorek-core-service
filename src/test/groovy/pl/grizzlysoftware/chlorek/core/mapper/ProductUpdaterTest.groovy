@@ -1,5 +1,6 @@
 package pl.grizzlysoftware.chlorek.core.mapper
 
+import pl.grizzlysoftware.chlorek.core.applier.HashTagApplier
 import pl.grizzlysoftware.chlorek.core.applier.UpdatedAtTagApplier
 import pl.grizzlysoftware.chlorek.core.model.Product
 import pl.grizzlysoftware.chlorek.core.service.ProductService
@@ -38,6 +39,16 @@ class ProductUpdaterTest extends Specification {
             1 * m.updatedAtTagApplier.accept(_)
     }
 
+    def "invokes HashTagApplier"() {
+        given:
+            def m = new ProductUpdater()
+            m.hashTagApplier = Mock(HashTagApplier)
+        when:
+            m.accept(new Product())
+        then:
+            1 * m.hashTagApplier.accept(_)
+    }
+
     def "invokes UpdatedAtTagApplier before updateProduct on ProductService"() {
         given:
             def m = new ProductUpdater()
@@ -47,6 +58,19 @@ class ProductUpdaterTest extends Specification {
             m.accept(new Product())
         then:
             1 * m.updatedAtTagApplier.accept(_)
+        then:
+            1 * m.productService.updateProduct(_)
+    }
+
+    def "invokes HashTagApplier before updateProduct on ProductService"() {
+        given:
+            def m = new ProductUpdater()
+            m.productService = Mock(ProductService)
+            m.hashTagApplier = Mock(HashTagApplier)
+        when:
+            m.accept(new Product())
+        then:
+            1 * m.hashTagApplier.accept(_)
         then:
             1 * m.productService.updateProduct(_)
     }
